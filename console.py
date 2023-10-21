@@ -246,7 +246,7 @@ class HBNBCommand(cmd.Cmd):
 
 				# isolate cls from id/args, ex: (<cls>, delim, <id/args>)
 				args = args.partition(" ")
-				if args[0] != ' ':
+				if args[0] != " ":
 						c_name = args[0]
 				else:  # class name not present
 						print("** class name missing **")
@@ -257,7 +257,7 @@ class HBNBCommand(cmd.Cmd):
 
 				# isolate id from args
 				args = args[2].partition(" ")
-				if args[0] != ' ':
+				if args[0] != " ":
 						c_id = args[0]
 				else:  # id not present
 						print("** instance id missing **")
