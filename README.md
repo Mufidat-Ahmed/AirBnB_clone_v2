@@ -140,3 +140,66 @@ Usage: <class_name>.update(<_id>, <dictionary>)
 (hbnb) ["[User] (98bea5de-9cb0-4d78-8a9d-c4de03521c30) {'updated_at': datetime.datetime(2020, 2, 19, 21, 47, 29, 134362), 'name': 'Fred the Frog', 'age': 9, 'id': '98bea5de-9cb0-4d78-8a9d-c4de03521c30', 'created_at': datetime.datetime(2020, 2, 19, 21, 47, 29, 134343)}"]
 ```
 <br>
+
+**README Summary**
+
+This project uses environment variables to configure the database connection and storage type. Environment variables are a convenient way to store configuration settings that can be accessed by different programs and scripts running on the system. This makes it easy to change the configuration without having to modify the code itself.
+
+To set the environment variables for this project, you can use the following command:
+
+```
+export HBNB_ENV=dev
+export HBNB_MYSQL_USER=my_username
+export HBNB_MYSQL_PWD=my_password
+export HBNB_MYSQL_HOST=localhost
+export HBNB_MYSQL_DB=my_database
+export HBNB_TYPE_STORAGE=file
+```
+
+The following is a summary of the environment variables:
+
+* `HBNB_ENV`: The running environment. It can be `dev` or `test` for the moment, but `production` will be added soon.
+* `HBNB_MYSQL_USER`: The username of your MySQL database.
+* `HBNB_MYSQL_PWD`: The password of your MySQL database.
+* `HBNB_MYSQL_HOST`: The hostname of your MySQL database.
+* `HBNB_MYSQL_DB`: The database name of your MySQL database.
+* `HBNB_TYPE_STORAGE`: The type of storage used. It can be `file` (using FileStorage) or `db` (using DBStorage).
+
+In addition to the environment variables, this project also uses the following resources:
+
+* **cmd** module: The `cmd` module provides a simple framework for writing line-oriented command interpreters. This is used to implement the interactive console for the project.
+* **packages** concept page: The `packages` concept page provides information on how to create and use Python packages. This is used to structure the project code and make it reusable.
+* **unittest** module: The `unittest` module provides a framework for writing unit tests. This is used to ensure the quality of the code.
+* **args/kwargs**: `args` and `kwargs` are used to pass arguments to functions and methods. This is used to make the code more flexible and reusable.
+* SQLAlchemy tutorial: The SQLAlchemy tutorial provides an introduction to using SQLAlchemy, a Python SQL toolkit and object relational mapper. This is used to interact with the MySQL database.
+* How To Create a New User and Grant Permissions in MySQL: This article provides instructions on how to create a new user and grant permissions in MySQL. This is needed to create the database user and grant it access to the database.
+* Python3 and environment variables: This article provides information on how to use environment variables in Python3. This is used to set the environment variables that are used by the project.
+* SQLAlchemy: SQLAlchemy is a Python SQL toolkit and object relational mapper. This is used to interact with the MySQL database.
+* MySQL 8.0 SQL Statement Syntax: This article provides information on the SQL statement syntax for MySQL 8.0. This is needed to write SQL queries to interact with the database.
+
+**Additional Information**
+
+This project uses a variety of design patterns and best practices, including:
+
+* **Model-View-Controller (MVC) pattern:** The MVC pattern separates the application into three main components: models, views, and controllers. This makes the code more modular and reusable.
+* **Dependency injection:** Dependency injection is a design pattern that allows objects to be decoupled from their dependencies. This makes the code more testable and maintainable.
+* **Unit testing:** Unit tests are used to test individual units of code, such as functions and classes. This helps to ensure the quality of the code.
+* **Continuous integration and continuous delivery (CI/CD):** CI/CD is a set of practices that automates the building, testing, and deployment of software. This helps to ensure that the software is always in a deployable state.
+
+**Getting Started**
+
+To get started with this project, you will need to install the following Python packages:
+
+* `pip3 install flask sqlalchemy`
+
+Once you have installed the required packages, you can start the project by running the following command:
+
+```
+python3 run.py
+```
+
+This will start the project in development mode. You can then access the project at `http://localhost:5000` in your web browser.
+
+**Conclusion**
+
+This project is a good starting point for learning how to develop Python web applications. It uses a variety of design patterns and best practices, and it is
