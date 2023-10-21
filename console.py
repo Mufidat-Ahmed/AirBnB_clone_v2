@@ -257,7 +257,7 @@ class HBNBCommand(cmd.Cmd):
 
 				# isolate id from args
 				args = args[2].partition(" ")
-				if args[0] is not ' ':
+				if args[0] != ' ':
 						c_id = args[0]
 				else:  # id not present
 						print("** instance id missing **")
