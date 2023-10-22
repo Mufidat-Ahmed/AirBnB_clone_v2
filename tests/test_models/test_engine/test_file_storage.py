@@ -2,6 +2,7 @@
 """ Module for testing file storage"""
 import unittest
 from models.base_model import BaseModel
+from models.engine.file_storage import FileStorage
 from models import storage
 import os
 
@@ -16,6 +17,7 @@ class test_fileStorage(unittest.TestCase):
             del_list.append(key)
         for key in del_list:
             del storage._FileStorage__objects[key]
+        storage.reload()
 
     def tearDown(self):
         """ Remove storage file at end of tests """
@@ -67,6 +69,8 @@ class test_fileStorage(unittest.TestCase):
         storage.reload()
         for obj in storage.all().values():
             loaded = obj
+        for obj in storage.all().values():
+            loaded = obj
         self.assertEqual(new.to_dict()['id'], loaded.to_dict()['id'])
 
     def test_reload_empty(self):
@@ -98,6 +102,7 @@ class test_fileStorage(unittest.TestCase):
         """ Key is properly formatted """
         new = BaseModel()
         _id = new.to_dict()['id']
+        temp = 'BaseModel' + '.' + _id
         for key in storage.all().keys():
             temp = key
         self.assertEqual(temp, 'BaseModel' + '.' + _id)
