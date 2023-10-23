@@ -118,17 +118,27 @@ class HBNBCommand(cmd.Cmd):
 				pass
 
 		def do_create(self, args):
+				
 				""" Create an object of any class"""
-				if not args:
+				  HBNBCommand.classes = {
+    					'BaseModel': BaseModel,
+    					'User': User,
+    					'Place': Place,
+    					'State': State,
+    					'City': City,
+    					'Amenity': Amenity,
+    					'Review': Review
+  					}
+				class_name, params = args.split(" ", 1)			
+				if not class_name:
 						print("** class name missing **")
 						return
-				elif args not in HBNBCommand.classes:
+				elif class_name not in HBNBCommand.classes:
 						print("** class doesn't exist")
 						return
 				""" Split the arguments into the class name and parameters.
 				p_meters are the parameters. """
 			
-				class_name, params = args.split(" ", 1)
 				if class_name not in HBNBCommand.classes:
 					print("** class doesn't exist")
 					return
