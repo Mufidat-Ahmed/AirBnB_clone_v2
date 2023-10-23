@@ -127,29 +127,42 @@ class HBNBCommand(cmd.Cmd):
 						return
 				""" Split the arguments into the class name and parameters.
 				p_meters are the parameters. """
-				class_name, p_meters = args[0], args[1:]
+			
+				class_name, params = args.split(" ", 1)
+				if class_name not in HBNBCommand.classes:
+					print("** class doesn't exist")
+					return
 
 				""" Parse the parameters into a dictionary.
 				p_dict is the parameter dictionary """
-				p_dict = {}
-				for p_meter in p_meters:
-					key, value = p_meter.split("=")
-					value = value.strip('"')
-					if "." in value:
+				params_dict = {}
+				for param in params.split(" "):
+					key, value = param.split("=")
+					key = key.replace("_", " ")
+					if value.startswith('"'):
+						value = value[1:-1]
+						value = value.replace("\\\"", '"')
+					elif "." in value:
 						value = float(value)
-					elif value.isdigit():
-						value = int(value)
 					else:
-						value = value.replace("_", " ")
+						value = int(value)
 
-					p_dict[key] = value
+					if not isinstance(value, (str, int, float)):
+						continue
+					params_dict[key] = value
+				if os.getenv(('HBNB_TYPE_STORAGE') == 'db':
+					if not hasattr(params_dict, 'id'):
+						params_dict['id'] = str(uuid.uuid4())
+					if not hasattr(params_dict, 'created_at'):
+						params_dict['created_at'] = str(datetime.now())
+					if not hasattr(params_dict, 'updated_at'):
+						params_dict['updated_at'] = str(datetime.now())
 
 				""" Create a new instance of the class with the given parameters. """
-				new_instance = HBNBCommand.classes[class_name](**p_dict)
+				new_instance = HBNBCommand.classes[class_name](**params_dict)
 
-				storage.save(new_instance)
+				new_instance.save()
 				print(new_instance.id)
-				storage.save()
 
 		def help_create(self):
 				""" Help information for the create method """
