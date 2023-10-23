@@ -118,17 +118,6 @@ class HBNBCommand(cmd.Cmd):
 				pass
 
 		def do_create(self, args):
-				
-				""" Create an object of any class"""
-				  HBNBCommand.classes = {
-    					'BaseModel': BaseModel,
-    					'User': User,
-    					'Place': Place,
-    					'State': State,
-    					'City': City,
-    					'Amenity': Amenity,
-    					'Review': Review
-  					}
 				""" Create an object of any class"""
 				if not args:
 						print("** class name missing **")
@@ -137,14 +126,14 @@ class HBNBCommand(cmd.Cmd):
 						print("** class doesn't exist")
 						return
 				""" Split the arguments into the class name and parameters.
-				params are the parameters. """
-				class_name, params = args[0], args[1:]
+				p_meters are the parameters. """
+				class_name, p_meters = args[0], args[1:]
 
 				""" Parse the parameters into a dictionary.
-				params_dict is the parameter dictionary """
-				params_dict = {}
-				for param in params:
-					key, value = param.split("=")
+				p_dict is the parameter dictionary """
+				p_dict = {}
+				for p_meter in p_meters:
+					key, value = p_meter.split("=")
 					value = value.strip('"')
 					if "." in value:
 						value = float(value)
@@ -153,18 +142,14 @@ class HBNBCommand(cmd.Cmd):
 					else:
 						value = value.replace("_", " ")
 
-					params_dict[key] = value
+					p_dict[key] = value
 
 				""" Create a new instance of the class with the given parameters. """
-				new_instance = HBNBCommand.classes[class_name](**params_dict)
+				new_instance = HBNBCommand.classes[class_name](**p_dict)
 
 				storage.save(new_instance)
-				new_instance.save()
 				print(new_instance.id)
 				storage.save()
-
-			
-				
 
 		def help_create(self):
 				""" Help information for the create method """
