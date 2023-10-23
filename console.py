@@ -129,50 +129,42 @@ class HBNBCommand(cmd.Cmd):
     					'Amenity': Amenity,
     					'Review': Review
   					}
-				class_name, params = args.split(" ", 1)			
-				if not class_name:
+				""" Create an object of any class"""
+				if not args:
 						print("** class name missing **")
 						return
-				elif class_name not in HBNBCommand.classes:
+				elif args not in HBNBCommand.classes:
 						print("** class doesn't exist")
 						return
 				""" Split the arguments into the class name and parameters.
-				p_meters are the parameters. """
-			
-				if class_name not in HBNBCommand.classes:
-					print("** class doesn't exist")
-					return
+				params are the parameters. """
+				class_name, params = args[0], args[1:]
 
 				""" Parse the parameters into a dictionary.
-				p_dict is the parameter dictionary """
+				params_dict is the parameter dictionary """
 				params_dict = {}
-				for param in params.split(" "):
+				for param in params:
 					key, value = param.split("=")
-					key = key.replace("_", " ")
-					if value.startswith('"'):
-						value = value[1:-1]
-						value = value.replace("\\\"", '"')
-					elif "." in value:
+					value = value.strip('"')
+					if "." in value:
 						value = float(value)
-					else:
+					elif value.isdigit():
 						value = int(value)
+					else:
+						value = value.replace("_", " ")
 
-					if not isinstance(value, (str, int, float)):
-						continue
 					params_dict[key] = value
-				if os.getenv(('HBNB_TYPE_STORAGE') == 'db':
-					if not hasattr(params_dict, 'id'):
-						params_dict['id'] = str(uuid.uuid4())
-					if not hasattr(params_dict, 'created_at'):
-						params_dict['created_at'] = str(datetime.now())
-					if not hasattr(params_dict, 'updated_at'):
-						params_dict['updated_at'] = str(datetime.now())
 
 				""" Create a new instance of the class with the given parameters. """
 				new_instance = HBNBCommand.classes[class_name](**params_dict)
 
+				storage.save(new_instance)
 				new_instance.save()
 				print(new_instance.id)
+				storage.save()
+
+			
+				
 
 		def help_create(self):
 				""" Help information for the create method """
