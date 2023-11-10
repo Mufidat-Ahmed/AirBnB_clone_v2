@@ -5,21 +5,32 @@ from fabric.api import put, run, env
 from os.path import exists
 env.hosts = ['34.232.69.6', '52.87.233.16']
 
-
 def do_deploy(archive_path):
-    """to distribute the generated repo onthe servers"""
-    if exists(archive_path) is False:
+  """Distributes an archive to the web servers."""
+
+  # Check if the archive file exists.
+  if not os.path.isfile(archive_path):
     return False
-try:
-filename_mk = archive_path.split("/")[-1]
-ext_mk = filename_mk.split(".")[0]
-path = "/data/web_static/releases/"
-put(archive_path, '/tmp/')
-run('mkdir -p {}{}/'.format(path, ext_mk))
-run('tar -xzf /tmp/{} -C {}{}/'.format(filename_mk, path, ext_mk))
-run('rm /tmp/{}'.format(filename_mk))
-run('mv {0}{1}/web_static/* {0}{1}/'.format(path, ext_mk))
-run('rm -rf {}{}/web_static'.format(path, ext_mk))
-run('rm -rf /data/web_static/current')
-run('ln -s {}{}/ /data/web_static/current'.format(path, ext_mk))
-return True
+
+  # Get the archive filename without extension.
+  archive_filename = archive_path.split("/")[-1].split(".")[0]
+
+  # Upload the archive to the /tmp/ directory of the web servers.
+  put(archive_path, "/tmp/")
+
+  # Uncompress the archive to the folder /data/web_static/releases/<archive filename without extension> on the web servers.
+  run('mkdir -p /data/web_static/releases/{}'.format(archive_filename))
+  run('tar -xzf /tmp/{} -C /data/web_static/releases/{}'.format(archive_filename, archive_filename))
+
+  # Delete the archive from the web servers.
+  run('rm /tmp/{}'.format(archive_filename))
+
+  # Delete the symbolic link /data/web_static/current from the web servers.
+  run('rm -f /data/web_static/current')
+
+  # Create a new the symbolic link /data/web_static/current on the web servers, linked to the new version of your code (/data/web_static/releases/<archive filename without extension>).
+  run('ln -s /data/web_static/releases/{} /data/web_static/current'.format(archive_filename))
+
+  # Return True if all operations have been done correctly, otherwise return False.
+  return True
+
