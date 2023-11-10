@@ -5,7 +5,7 @@ sudo apt-get -y update
 sudo apt-get -y upgrade
 sudo apt-get -y install nginx
 sudo mkdir -p /data/web_static/releases/test /data/web_static/shared
-echo "This is a test file oo" | sudo tee /data/web_static/releases/test/index.html
+echo "Holberton School" | sudo tee /data/web_static/releases/test/index.html
 sudo ln -sf /data/web_static/releases/test/ /data/web_static/current
 sudo chown -hR ubuntu:ubuntu /data/
 sudo sed -i '38i\\tlocation /hbnb_static/ {\n\t\talias /data/web_static/current/;\n\t}\n' /etc/nginx/sites-available/default
@@ -24,7 +24,7 @@ sudo mkdir -p /data/web_static/current
 sudo mkdir -p /data/web_static/shared
 
 # Create a fake HTML file for testing
-sudo echo "<html><body>This is a test file oo</body></html>" > /data/web_static/releases/test/index.html
+sudo echo "<html><body>Holberton School</body></html>" > /data/web_static/releases/test/index.html
 
 # Create a symbolic link to the test folder
 if [ -L /data/web_static/current ]; then
