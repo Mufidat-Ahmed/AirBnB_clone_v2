@@ -1,23 +1,24 @@
 #!/usr/bin/python3
-""" this is the code solution for task  100"""
-
-import os
-from fabric.api import *
-
-env.hosts = ['34.232.69.6', '52.87.233.16']
-
+""" solution for task 101 """
+from fabric.api import run, env
 
 def do_clean(number=0):
-	""" Clean out all outdated archives """
-	number = 1 if int(number) == 0 else int(number)
+  """Deletes out-of-date archives.
 
-	arch_mk = sorted(os.listdir("versions"))
-	[arch_mk.pop() for i in range(number)]
-	with lcd("versions"):
-		[local("rm ./{}".format(a)) for a in arch_mk]
+  Args:
+    number (int): The number of archives to keep.
+  """
 
-	with cd("/data/web_static/releases"):
-		arch_mk = run("ls -tr").split()
-		arch_mk = [a for a in arch_mk if "web_static_" in a]
-		[arch_mk.pop() for i in range(number)]
-		[run("rm -rf ./{}".format(a)) for a in arch_mk]
+  archives = run("ls versions/").split("\n")
+
+  for archive in archives[:-number]:
+    run("rm versions/{}".format(archive))
+
+  run('for archive in $(ls "/data/web_static/releases/"); do if [[ "$archive" != "test" ]]; then rm /data/web_static/releases/"$archive"; fi; done')
+
+if __name__ == "__main__":
+  env.hosts = ['34.232.69.6', '52.87.233.16']
+
+  number = int(input("Enter the number of archives to keep: "))
+
+  do_clean(number)
