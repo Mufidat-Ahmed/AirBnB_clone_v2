@@ -1,32 +1,50 @@
 #!/usr/bin/python3
-""" This is the code solution for task 3. """
+""" solution for task 3 """
 
-from fabric.api import local, run, env
-from os.path import exists, isdir
+from fabric.api import run, env
 
-env.hosts = ['34.232.69.6', '52.87.233.16']
+def do_pack():
+  """Creates an archive."""
 
-def do_clean(number=0):
-  """Deletes out-of-date archives.
+  # Create the archive.
+  run('tar -cvzf versions/web_static.tgz web_static')
 
-  Args:
-    number (int): The number of archives to keep.
-  """
+  # Return the path of the created archive.
+  return 'versions/web_static.tgz'
 
-  # Get the list of all archives.
-  archives = local("ls versions/").split("\n")
+def do_deploy(archive_path):
+  """Distributes an archive to the web servers."""
 
-  # Delete all archives except for the most recent `number` archives.
-  for archive in archives[:-number]:
-    local("rm versions/{}".format(archive))
+  """ Check if the archive file exists. """
+  if not exists(archive_path):
+	return False
 
-  # Run the same command on both web servers.
-  run('for archive in $(ls "/data/web_static/releases/"); do if [[ "$archive" != "test" ]]; then rm /data/web_static/releases/"$archive"; fi; done')
+  """ Upload the archive to the web servers."""
+  run('put {} /tmp/'.format(archive_path))
 
+  """Uncompress the archive on the web servers. """
+  run('tar -xzf /tmp/web_static.tgz -C /data/web_static/releases/')
+
+  """ Delete the archive from the web servers. """
+  run('rm /tmp/web_static.tgz')
+
+  """ Create a symbolic link to the current version of the web application on the web servers. """
+  run('ln -s /data/web_static/releases/web_static /data/web_static/current')
+
+  """ Return True if all operations have been done correctly, otherwise return False. """
+  return True
+
+def deploy():
+  """Creates and distributes an archive to the web servers."""
+
+  archive_path = do_pack()
+
+  if archive_path is None:
+	return False
+
+  return do_deploy(archive_path)
 
 if __name__ == "__main__":
-  # Get the number of archives to keep from the command line.
-  number = int(input("Enter the number of archives to keep: "))
+  env.hosts = ['34.232.69.6', '52.87.233.16']
 
-  # Delete the out-of-date archives.
-  do_clean(number)
+  deploy()
