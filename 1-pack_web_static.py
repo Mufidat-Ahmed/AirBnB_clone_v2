@@ -1,17 +1,33 @@
 #!/usr/bin/python3
-""" this is the solution for task 1 """
+""" This is the solution for task 1. """
 
-import os.path
+import os
 from datetime import datetime
 from fabric.api import local
-from os.path import isdir
 
 def do_pack():
-    """this is to create a tgz repo"""
-    try:
-        date_mk = datetime.now().strftime("%Y%m%d%H%M%S")
-    if isdir("versions") is False:
-        local("mkdir versions")
-    filename_mk = "versions/web_static_{}.tgz".format(date_mk)
-    local("tar -cvzf {} web_static".format(filename_mk))
-return filename_mk
+  """This function creates a .tgz archive from the contents of the web_static folder."""
+
+  # Create the versions folder if it doesn't exist.
+  if not os.path.isdir("versions"):
+    local("mkdir versions")
+
+  # Get the current date and time.
+  now = datetime.now()
+
+  # Generate the archive name.
+  archive_name = "versions/web_static_{}.tgz".format(now.strftime("%Y%m%d%H%M%S"))
+
+  # Create the archive.
+  local("tar -cvzf {} web_static".format(archive_name))
+
+  return archive_name if os.path.isfile(archive_name) else None
+
+# Example usage:
+
+archive_path = do_pack()
+if archive_path is not None:
+  print("Archive created successfully:", archive_path)
+else:
+  print("Failed to create archive.")
+
