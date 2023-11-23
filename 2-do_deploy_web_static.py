@@ -7,6 +7,7 @@ from fabric.api import run
 from fabric.api import env
 env.hosts = ['54.152.133.243', '54.237.34.128']
 
+
 def do_deploy(archive_path):
     """
     Deploy archive to web servers
@@ -23,7 +24,8 @@ def do_deploy(archive_path):
         run("rm /tmp/{}.tgz".format(archive_name))
         run("mv /data/web_static/releases/{}/web_static/* "
             "/data/web_static/releases/{}/".format(archive_name, archive_name))
-        run("rm -rf /data/web_static/releases/{}/web_static".format(archive_name))
+        run("rm -rf /data/web_static/releases/{}/web_static".format(
+            archive_name))
         run("rm -rf /data/web_static/current")
         run("ln -s /data/web_static/releases/{}/ /data/web_static/current"
             .format(archive_name))

@@ -1,6 +1,5 @@
 #!/usr/bin/python3
-"""creates and distributes an archive to your web servers
- using the function deploy"""
+# creates and distributes an archive to your web servers
 
 from fabric.api import local
 from os.path import exists
