@@ -23,11 +23,8 @@ def do_pack():
 
   return archive_name if os.path.isfile(archive_name) else None
 
-""" Example usage: """
-
 archive_path = do_pack()
 if archive_path is not None:
   print("Archive created successfully:", archive_path)
 else:
   print("Failed to create archive.")
-

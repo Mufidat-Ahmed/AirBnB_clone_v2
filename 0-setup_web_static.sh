@@ -1,55 +1,41 @@
 #!/usr/bin/env bash
-#on some webstatic business
+#Bash script that sets up your web servers for the deployment of web_static
+#Create necessary directories
+#Create a fake HTML file for testing
+#Update Nginx configuration to serve content
 
-sudo apt-get -y update
-sudo apt-get -y upgrade
-sudo apt-get -y install nginx
-sudo mkdir -p /data/web_static/releases/test /data/web_static/shared
-echo "Holberton School" | sudo tee /data/web_static/releases/test/index.html
-sudo ln -sf /data/web_static/releases/test/ /data/web_static/current
-sudo chown -hR ubuntu:ubuntu /data/
-sudo sed -i '38i\\tlocation /hbnb_static/ {\n\t\talias /data/web_static/current/;\n\t}\n' /etc/nginx/sites-available/default
-sudo service nginx start
+apt-get update
+apt-get install -y nginx
 
-# Install Nginx if not already installed
-if ! dpkg --get-selections | grep -q nginx; then
-    sudo apt update && sudo apt install nginx -y
-fi
+mkdir -p /data/web_static/releases/test/
+mkdir -p /data/web_static/shared/
+echo "Holberton School" > /data/web_static/releases/test/index.html
+ln -sf /data/web_static/releases/test/ /data/web_static/current
 
-# Create necessary directories
-sudo mkdir -p /data
-sudo mkdir -p /data/web_static
-sudo mkdir -p /data/web_static/releases
-sudo mkdir -p /data/web_static/current
-sudo mkdir -p /data/web_static/shared
+chown -R ubuntu /data/
+chgrp -R ubuntu /data/
 
-# Create a fake HTML file for testing
-sudo echo "<html><body>Holberton School</body></html>" > /data/web_static/releases/test/index.html
-
-# Create a symbolic link to the test folder
-if [ -L /data/web_static/current ]; then
-    sudo rm /data/web_static/current
-fi
-sudo ln -s /data/web_static/releases/test /data/web_static/current
-
-# Set ownership of the /data directory to the ubuntu user and group
-sudo chown -R ubuntu:ubuntu /data
-
-# Update Nginx configuration to serve content from /data/web_static/current/ to hbnb_static
-sudo cat > /etc/nginx/sites-available/hbnb_static <<EOF
- EOF
-server {
-    listen 80;
-    server_name anealx.tech;
+printf %s "server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+    add_header X-Served-By $HOSTNAME;
+    root   /var/www/html;
+    index  index.html index.htm;
 
     location /hbnb_static {
-	alias /data/web_static/current/;
+        alias /data/web_static/current;
+        index index.html index.htm;
     }
-}
-EOF
 
-sudo ln -s /etc/nginx/sites-available/hbnb_static /etc/nginx/sites-enabled/hnbn_static
+    location /redirect_me {
+        return 301 http://cuberule.com/;
+    }
 
-# Restart Nginx to apply the new configuration
-sudo systemctl restart nginx
-EOF
+    error_page 404 /404.html;
+    location /404 {
+      root /var/www/html;
+      internal;
+    }
+}" > /etc/nginx/sites-available/default
+
+service nginx restart
